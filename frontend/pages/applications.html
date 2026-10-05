@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Applications - ChainHire 2.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: "#0F172A", 800: "#1E293B", 700: "#334155" },
+            emerald: { 500: "#10B981", 600: "#059669", 700: "#047857", 50: "#ECFDF5" },
+            surface: "#F8FAFC"
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+</head>
+<body class="bg-surface text-slate-800 antialiased min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 ml-[260px]">
+      <!-- Topbar Header -->
+      <div id="topbar-container"></div>
+
+      <!-- Main Container -->
+      <main class="p-8 max-w-7xl mx-auto">
+        <!-- Page Title Header (Matching Screenshot 5) -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-slate-900">My Applications</h1>
+          <p class="text-xs text-slate-500 mt-0.5">Track and manage all your job applications in one place.</p>
+        </div>
+
+        <!-- Table Card Container -->
+        <div class="chain-card">
+          <!-- Top Filter Toolbar -->
+          <div class="p-6 border-b border-slate-100 flex items-center justify-end">
+            <div class="relative">
+              <select id="applications-status-filter" onchange="loadApplications()" 
+                class="appearance-none pl-3 pr-8 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:outline-none focus:border-emerald-500 cursor-pointer shadow-sm">
+                <option value="All Status">All Status</option>
+                <option value="Applied">Applied</option>
+                <option value="Shortlisted">Shortlisted</option>
+                <option value="Hired">Hired</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+              <span class="absolute right-2.5 top-2.5 pointer-events-none text-slate-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </div>
+          </div>
+
+          <!-- Applications Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-slate-50/60 text-slate-400 text-xs font-semibold border-b border-slate-100">
+                <tr>
+                  <th class="py-3.5 px-6">Job Title</th>
+                  <th class="py-3.5 px-6">Company</th>
+                  <th class="py-3.5 px-6">Applied Date</th>
+                  <th class="py-3.5 px-6">Status</th>
+                  <th class="py-3.5 px-6 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="applications-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Bottom Summary & Pagination (Matching Screenshot 5) -->
+          <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div id="applications-count-summary" class="text-xs text-slate-500">
+              Showing 1 to 5 of 5 applications
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button class="w-7 h-7 flex items-center justify-center border border-slate-200 rounded text-slate-400 hover:bg-slate-50 text-xs">
+                &lt;
+              </button>
+              <button class="w-7 h-7 flex items-center justify-center bg-emerald-600 text-white rounded font-medium text-xs">
+                1
+              </button>
+              <button class="w-7 h-7 flex items-center justify-center border border-slate-200 rounded text-slate-600 hover:bg-slate-50 text-xs">
+                2
+              </button>
+              <button class="w-7 h-7 flex items-center justify-center border border-slate-200 rounded text-slate-600 hover:bg-slate-50 text-xs">
+                3
+              </button>
+              <button class="w-7 h-7 flex items-center justify-center border border-slate-200 rounded text-slate-400 hover:bg-slate-50 text-xs">
+                &gt;
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- View Application Details Modal -->
+  <div id="app-details-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="chain-card max-w-md w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-bold text-slate-900 text-base">Application Details</h3>
+        <button onclick="document.getElementById('app-details-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">✕</button>
+      </div>
+
+      <div id="app-modal-content" class="mt-4 space-y-3 text-xs text-slate-600">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+        <button onclick="document.getElementById('app-details-modal').classList.add('hidden')" class="btn-emerald text-xs">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/web3.js"></script>
+  <script>
+    let currentApplications = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      Auth.requireAuth(["jobSeeker", "admin"]);
+      Auth.renderNavigation("applications");
+      loadApplications();
+    });
+
+    async function loadApplications() {
+      const status = document.getElementById("applications-status-filter").value;
+      const tbody = document.getElementById("applications-tbody");
+
+      try {
+        const url = status && status !== "All Status" 
+          ? `/jobs/applications/seeker?status=${encodeURIComponent(status)}`
+          : "/jobs/applications/seeker";
+
+        const res = await API.get(url);
+        if (res.success) {
+          currentApplications = res.applications;
+          renderTable();
+        }
+      } catch (err) {
+        console.error("Error loading applications:", err);
+      }
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById("applications-tbody");
+      const summaryEl = document.getElementById("applications-count-summary");
+      if (!tbody) return;
+
+      if (summaryEl) {
+        summaryEl.innerText = `Showing 1 to ${currentApplications.length} of ${currentApplications.length} applications`;
+      }
+
+      if (currentApplications.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 text-xs">No applications match the selected filter.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = currentApplications.map((app, index) => {
+        // Dynamic brand colors and logos matching screenshot
+        const brandIcons = [
+          { bg: "bg-emerald-600", text: "S" },
+          { bg: "bg-slate-900", text: "D" },
+          { bg: "bg-indigo-600", text: "M" },
+          { bg: "bg-teal-600", text: "C" },
+          { bg: "bg-purple-600", text: "W" },
+        ];
+        const icon = brandIcons[index % brandIcons.length];
+
+        let statusBadge = "";
+        if (app.status === "Applied") {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              Applied
+            </span>
+          `;
+        } else if (app.status === "Shortlisted") {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              Shortlisted
+            </span>
+          `;
+        } else if (app.status === "Hired") {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Hired
+            </span>
+          `;
+        } else {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+              Rejected
+            </span>
+          `;
+        }
+
+        return `
+          <tr class="hover:bg-slate-50/70 transition-colors">
+            <!-- Job Title with icon -->
+            <td class="py-4 px-6">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg ${icon.bg} text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-sm">
+                  ${icon.text}
+                </div>
+                <div>
+                  <div class="font-bold text-slate-900 text-xs">${app.jobTitle}</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">${app.jobType || 'Full-time'} • ${app.location || 'Remote'}</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Company with green check -->
+            <td class="py-4 px-6">
+              <div class="flex items-center gap-1.5 font-semibold text-slate-900 text-xs">
+                <span>${app.company}</span>
+                <svg class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </td>
+
+            <!-- Applied Date -->
+            <td class="py-4 px-6 text-xs text-slate-500">
+              ${new Date(app.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            </td>
+
+            <!-- Status Badge -->
+            <td class="py-4 px-6">
+              ${statusBadge}
+            </td>
+
+            <!-- Action View -->
+            <td class="py-4 px-6 text-right">
+              <button onclick="viewApplication(${app.applicationId})" class="btn-outline-secondary text-xs py-1 px-3">
+                View
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function viewApplication(id) {
+      const app = currentApplications.find(a => a.applicationId === id);
+      if (!app) return;
+
+      const content = document.getElementById("app-modal-content");
+      content.innerHTML = `
+        <div class="space-y-2">
+          <div><strong class="text-slate-800">Job Title:</strong> ${app.jobTitle}</div>
+          <div><strong class="text-slate-800">Company:</strong> ${app.company}</div>
+          <div><strong class="text-slate-800">Date Applied:</strong> ${new Date(app.appliedAt).toLocaleString()}</div>
+          <div><strong class="text-slate-800">Status:</strong> <span class="font-semibold text-emerald-600">${app.status}</span></div>
+          ${app.coverNote ? `<div><strong class="text-slate-800">Cover Note:</strong><p class="mt-1 p-2 bg-slate-50 rounded border border-slate-100">${app.coverNote}</p></div>` : ''}
+          ${app.resumeUrl ? `<div><strong class="text-slate-800">Resume:</strong> <a href="${app.resumeUrl}" target="_blank" class="text-emerald-600 underline">View Submitted File</a></div>` : ''}
+        </div>
+      `;
+      document.getElementById("app-details-modal").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>

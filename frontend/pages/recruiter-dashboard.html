@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recruiter Dashboard - ChainHire 2.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: "#0F172A", 800: "#1E293B", 700: "#334155" },
+            emerald: { 500: "#10B981", 600: "#059669", 700: "#047857", 50: "#ECFDF5" },
+            surface: "#F8FAFC"
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+</head>
+<body class="bg-surface text-slate-800 antialiased min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 ml-[260px]">
+      <!-- Topbar Header -->
+      <div id="topbar-container"></div>
+
+      <!-- Main Container -->
+      <main class="p-8 max-w-7xl mx-auto">
+        <!-- Dashboard Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 class="text-2xl font-bold text-slate-900">Recruiter & Employer Hub</h1>
+            <p class="text-xs text-slate-500 mt-0.5">Verify candidate credentials on Ethereum and manage talent pipelines.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="Recruiter.openPostJobModal()" class="btn-emerald text-xs py-2 px-3.5">
+              + Post New Job
+            </button>
+            <a href="contracts.html" class="btn-outline-secondary text-xs py-2 px-3.5">
+              View Verified Ledger
+            </a>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <!-- Pending Verifications -->
+          <div class="chain-card p-6 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-500">Verification Requests Pending</div>
+              <div id="stat-pending-verifications" class="text-3xl font-black text-amber-500 mt-1">1</div>
+              <div class="text-[11px] text-amber-600 font-medium mt-1">Awaiting your on-chain cryptographic sign</div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+          </div>
+
+          <!-- Total Applications Received -->
+          <div class="chain-card p-6 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-500">Applications Received</div>
+              <div id="stat-recruiter-applications" class="text-3xl font-black text-emerald-600 mt-1">0</div>
+              <div id="stat-recruiter-breakdown" class="text-[11px] text-emerald-600 font-medium mt-1">Loading...</div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Verification Inbox (Pending requests) -->
+        <div class="chain-card mb-8">
+          <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Verification Inbox</h2>
+              <p class="text-xs text-slate-400">Review candidates who worked with your company and approve credentials on-chain.</p>
+            </div>
+            <span class="badge-pending">Pending Requests</span>
+          </div>
+
+          <div id="verification-inbox-container">
+            <!-- Dynamically populated via recruiter.js -->
+          </div>
+        </div>
+
+        <!-- Section 2: Received Job Applications (Candidates) -->
+        <div id="applications-tab" class="chain-card">
+          <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Candidate Applications</h2>
+              <p class="text-xs text-slate-400">Review talent submissions, verified credential counts, and change hiring status.</p>
+            </div>
+          </div>
+
+          <div id="recruiter-applications-container" class="overflow-x-auto">
+            <!-- Dynamically populated via recruiter.js -->
+          </div>
+        </div>
+
+        <!-- Section 3: My Posted Jobs History -->
+        <div id="my-jobs-history-section" class="chain-card mt-8">
+          <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">My Posted Jobs History</h2>
+              <p class="text-xs text-slate-400">View and manage positions published under your employer account.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button onclick="Recruiter.openPostJobModal()" class="btn-emerald text-xs py-1.5 px-3">
+                + Post New Job
+              </button>
+              <a href="jobs.html" class="text-xs font-semibold text-emerald-600 hover:underline">
+                View on Jobs Board →
+              </a>
+            </div>
+          </div>
+
+          <div id="recruiter-my-jobs-container" class="divide-y divide-slate-100">
+            <!-- Dynamically populated via recruiter.js -->
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Reject Modal -->
+  <div id="reject-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="chain-card max-w-md w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-bold text-slate-900 text-base">Reject Verification Request</h3>
+        <button onclick="Recruiter.closeRejectModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+      </div>
+
+      <form onsubmit="Recruiter.submitReject(event)" class="mt-4 space-y-4">
+        <input type="hidden" id="reject-request-id" />
+        <p class="text-xs text-slate-600">
+          Please provide feedback or the reason why this employment credential cannot be verified:
+        </p>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Remarks *</label>
+          <textarea id="reject-remarks" required rows="3" placeholder="e.g. Tenure dates mismatch, or no record of employment under this title..." 
+            class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-red-500"></textarea>
+        </div>
+        <div class="flex justify-end gap-3 pt-3">
+          <button type="button" onclick="Recruiter.closeRejectModal()" class="btn-outline-secondary text-xs">Cancel</button>
+          <button type="submit" class="btn-danger text-xs">Confirm Rejection</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Post Job Modal -->
+  <div id="post-job-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="chain-card max-w-lg w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-bold text-slate-900 text-base">Post a New Job Opportunity</h3>
+        <button onclick="Recruiter.closePostJobModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+      </div>
+
+      <form onsubmit="Recruiter.submitPostJob(event)" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Job Title *</label>
+          <input type="text" id="job-title" required placeholder="e.g. Senior Smart Contract Auditor" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Company / Organization *</label>
+            <input type="text" id="job-company" readonly required class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-slate-100 text-slate-700 font-semibold cursor-not-allowed select-none" />
+            <span class="text-[10px] text-emerald-600 font-medium mt-0.5 block">✓ Locked to your registered employer organization</span>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Location *</label>
+            <input type="text" id="job-location" required placeholder="e.g. Remote (Worldwide)" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Job Type</label>
+            <select id="job-type" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 bg-white">
+              <option value="Full-time">Full-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Part-time">Part-time</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Salary Range</label>
+            <input type="text" id="job-salary" placeholder="e.g. $130,000 – $170,000" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Description</label>
+          <textarea id="job-description" rows="3" placeholder="Job duties, mission, and scope..." class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Requirements</label>
+          <textarea id="job-requirements" rows="2" placeholder="Skills, years of experience, smart contract knowledge..." class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Skills <span class="font-normal text-slate-400">(comma separated)</span></label>
+          <input type="text" id="job-skills" placeholder="e.g. Solidity, React, Node.js, Web3.js, DeFi" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500" />
+          <span class="text-[10px] text-slate-400">These will appear as skill tags on the job listing</span>
+        </div>
+        <div class="flex justify-end gap-3 pt-3">
+          <button type="button" onclick="Recruiter.closePostJobModal()" class="btn-outline-secondary text-xs">Cancel</button>
+          <button type="submit" class="btn-emerald text-xs">Publish Job</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/web3.js"></script>
+  <script src="../js/recruiter.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      Recruiter.initDashboard();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "chainhire-frontend",
+  "version": "2.0.0",
+  "description": "ChainHire 2.0 Frontend - HTML5, Tailwind CSS, Vanilla JavaScript & Ethers.js v6",
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./css/styles.css -o ./css/output.css --minify",
+    "watch:css": "npx tailwindcss -i ./css/styles.css -o ./css/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.10"
+  }
+}

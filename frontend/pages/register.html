@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - ChainHire 2.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: "#0F172A", 800: "#1E293B", 700: "#334155" },
+            emerald: { 500: "#10B981", 600: "#059669", 700: "#047857", 50: "#ECFDF5" },
+            surface: "#F8FAFC"
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+</head>
+<body class="bg-surface text-slate-800 antialiased min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-lg w-full py-8">
+    
+    <!-- Logo & Header -->
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-navy-900 border border-slate-700 shadow-md mb-3 text-emerald-400">
+        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-black text-navy-900 tracking-tight">Chain<span class="text-emerald-500">Hire</span> 2.0</h1>
+      <p class="text-xs text-slate-500 mt-1">Create your decentralized career identity</p>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="chain-card p-8 shadow-xl">
+      <h2 class="text-lg font-bold text-slate-900 mb-5">Create New Account</h2>
+
+      <form onsubmit="handleRegister(event)" class="space-y-4">
+        <!-- Role Selection -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-2">I am registering as:</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2 p-3 border rounded-xl cursor-pointer hover:bg-slate-50 border-slate-200" id="role-label-seeker">
+              <input type="radio" name="role" value="jobSeeker" checked onchange="updateRoleUI()" class="text-emerald-600 focus:ring-emerald-500" />
+              <div>
+                <div class="text-xs font-bold text-slate-800">Job Seeker</div>
+                <div class="text-[10px] text-slate-400">Verify credentials & apply</div>
+              </div>
+            </label>
+
+            <label class="flex items-center gap-2 p-3 border rounded-xl cursor-pointer hover:bg-slate-50 border-slate-200" id="role-label-recruiter">
+              <input type="radio" name="role" value="recruiter" onchange="updateRoleUI()" class="text-emerald-600 focus:ring-emerald-500" />
+              <div>
+                <div class="text-xs font-bold text-slate-800">Recruiter / Employer</div>
+                <div class="text-[10px] text-slate-400">Verify on-chain & hire</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+          <input type="text" id="reg-name" required placeholder="e.g. Alex Morgan" 
+            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white" />
+          <p id="name-error" class="hidden text-[11px] text-red-500 mt-1 flex items-center gap-1 font-medium">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            <span>Only alphabetic letters (A-Z, a-z)</span>
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+          <input type="email" id="reg-email" required placeholder="alex.morgan@example.com" 
+            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+            <input type="tel" id="reg-phone" placeholder="+92 300 1234567" maxlength="16"
+              class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">CNIC / ID Number</label>
+            <input type="text" id="reg-cnic" placeholder="35202-1234567-1" maxlength="15"
+              class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white font-mono" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Password *</label>
+          <div class="relative">
+            <input type="password" id="reg-password" required minlength="8" placeholder="Min. 8 characters with letters, numbers, symbols" 
+              class="w-full px-3.5 py-2 pr-10 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white" />
+            <button type="button" onclick="togglePasswordVisibility('reg-password', 'eye-icon-reg')" 
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none" title="Show/Hide Password">
+              <svg id="eye-icon-reg" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Password Live Requirements Checklist -->
+          <div class="mt-2.5 p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1.5 text-[11px]">
+            <div class="text-[11px] font-semibold text-slate-600">Password requirements:</div>
+            <div id="rule-length" class="flex items-center gap-1.5 text-slate-400 transition-colors">
+              <span id="icon-length" class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[9px] font-bold">✕</span>
+              <span>Minimum 8 characters</span>
+            </div>
+            <div id="rule-letter" class="flex items-center gap-1.5 text-slate-400 transition-colors">
+              <span id="icon-letter" class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[9px] font-bold">✕</span>
+              <span>At least one alphabet letter (A-Z, a-z)</span>
+            </div>
+            <div id="rule-digit" class="flex items-center gap-1.5 text-slate-400 transition-colors">
+              <span id="icon-digit" class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[9px] font-bold">✕</span>
+              <span>At least one number (0-9)</span>
+            </div>
+            <div id="rule-special" class="flex items-center gap-1.5 text-slate-400 transition-colors">
+              <span id="icon-special" class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[9px] font-bold">✕</span>
+              <span>At least one special character (!@#$%^&*...)</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Ethereum Wallet Address (Optional)</label>
+          <input type="text" id="reg-wallet" placeholder="0x..." 
+            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white font-mono text-xs" />
+        </div>
+
+        <button type="submit" class="w-full btn-emerald py-2.5 rounded-lg text-sm font-semibold mt-2">
+          Create Account
+        </button>
+      </form>
+
+      <!-- Login Link -->
+      <div class="mt-6 text-center text-xs text-slate-500">
+        Already have an account? 
+        <a href="login.html" class="font-semibold text-emerald-600 hover:underline">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    function updateRoleUI() {
+      const isRecruiter = document.querySelector('input[name="role"]:checked').value === "recruiter";
+      const seekerBox = document.getElementById("role-label-seeker");
+      const recruiterBox = document.getElementById("role-label-recruiter");
+      if (isRecruiter) {
+        recruiterBox.classList.add("border-emerald-500", "bg-emerald-50/50");
+        seekerBox.classList.remove("border-emerald-500", "bg-emerald-50/50");
+      } else {
+        seekerBox.classList.add("border-emerald-500", "bg-emerald-50/50");
+        recruiterBox.classList.remove("border-emerald-500", "bg-emerald-50/50");
+      }
+    }
+    updateRoleUI();
+
+    // Full Name: only alphabets and spaces allowed (Numbers and symbols cannot be added)
+    const nameInput = document.getElementById("reg-name");
+    const nameError = document.getElementById("name-error");
+
+    nameInput.addEventListener("keydown", function(e) {
+      const allowedKeys = ["Backspace", "Tab", "Enter", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Delete"];
+      if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+        return;
+      }
+      // If the character is not an alphabet (A-Z, a-z) or space, reject keypress completely!
+      if (!/^[A-Za-z\s]$/.test(e.key)) {
+        e.preventDefault();
+        nameError.classList.remove("hidden");
+        nameInput.classList.add("border-red-400", "focus:border-red-500");
+        nameInput.classList.remove("border-slate-200", "focus:border-emerald-500");
+        setTimeout(() => {
+          nameError.classList.add("hidden");
+          nameInput.classList.remove("border-red-400", "focus:border-red-500");
+          nameInput.classList.add("border-slate-200", "focus:border-emerald-500");
+        }, 1800);
+      }
+    });
+
+    nameInput.addEventListener("input", function() {
+      // Strip any numbers or special characters immediately (e.g. on paste or drag-and-drop)
+      const sanitized = this.value.replace(/[^A-Za-z\s]/g, "");
+      if (this.value !== sanitized) {
+        this.value = sanitized;
+        nameError.classList.remove("hidden");
+        nameInput.classList.add("border-red-400", "focus:border-red-500");
+        nameInput.classList.remove("border-slate-200", "focus:border-emerald-500");
+        setTimeout(() => {
+          nameError.classList.add("hidden");
+          nameInput.classList.remove("border-red-400", "focus:border-red-500");
+          nameInput.classList.add("border-slate-200", "focus:border-emerald-500");
+        }, 1800);
+      } else {
+        nameError.classList.add("hidden");
+        nameInput.classList.remove("border-red-400", "focus:border-red-500");
+        nameInput.classList.add("border-slate-200", "focus:border-emerald-500");
+      }
+    });
+
+    // Password Live Requirements Checker
+    const passwordInput = document.getElementById("reg-password");
+    passwordInput.addEventListener("input", function() {
+      const pwd = this.value;
+      updateRuleState("rule-length", "icon-length", pwd.length >= 8);
+      updateRuleState("rule-letter", "icon-letter", /[A-Za-z]/.test(pwd));
+      updateRuleState("rule-digit", "icon-digit", /\d/.test(pwd));
+      updateRuleState("rule-special", "icon-special", /[!@#$%^&*(),.?":{}|<>\-_+=\[\]\\\/~`]/.test(pwd));
+    });
+
+    function updateRuleState(ruleId, iconId, isValid) {
+      const ruleEl = document.getElementById(ruleId);
+      const iconEl = document.getElementById(iconId);
+      if (!ruleEl || !iconEl) return;
+
+      if (isValid) {
+        ruleEl.classList.remove("text-slate-400");
+        ruleEl.classList.add("text-emerald-600", "font-medium");
+        iconEl.innerText = "✓";
+        iconEl.classList.remove("border-slate-300");
+        iconEl.classList.add("border-emerald-500", "bg-emerald-50", "text-emerald-600");
+      } else {
+        ruleEl.classList.remove("text-emerald-600", "font-medium");
+        ruleEl.classList.add("text-slate-400");
+        iconEl.innerText = "✕";
+        iconEl.classList.remove("border-emerald-500", "bg-emerald-50", "text-emerald-600");
+        iconEl.classList.add("border-slate-300");
+      }
+    }
+
+    // Phone Number Handler (+92 auto prefix & format)
+    const phoneInput = document.getElementById("reg-phone");
+    phoneInput.addEventListener("focus", function() {
+      if (!this.value.trim()) {
+        this.value = "+92 ";
+      }
+    });
+
+    phoneInput.addEventListener("input", function() {
+      let val = this.value;
+      if (val.startsWith("0")) {
+        val = "+92 " + val.slice(1);
+      } else if (val.length > 0 && !val.startsWith("+92")) {
+        val = "+92 " + val.replace(/^\+?92\s*/, "");
+      }
+      
+      let prefix = val.startsWith("+92") ? "+92 " : "";
+      let rest = val.replace(/^\+92\s*/, "").replace(/\D/g, "").slice(0, 10);
+      
+      if (rest.length > 3) {
+        this.value = `${prefix}${rest.slice(0, 3)} ${rest.slice(3)}`;
+      } else if (rest.length > 0) {
+        this.value = `${prefix}${rest}`;
+      } else {
+        this.value = prefix ? prefix.trim() : "";
+      }
+    });
+
+    phoneInput.addEventListener("blur", function() {
+      if (this.value.trim() === "+92") {
+        this.value = "";
+      }
+    });
+
+    // CNIC Auto-Formatter: exactly 13 digits (5 - 7 - 1)
+    const cnicInput = document.getElementById("reg-cnic");
+    cnicInput.addEventListener("input", function() {
+      // Remove any non-digits, cap at exactly 13 digits
+      const digits = this.value.replace(/\D/g, "").slice(0, 13);
+      
+      let formatted = "";
+      if (digits.length > 12) {
+        // 5 digits - 7 digits - 1 digit
+        formatted = `${digits.slice(0, 5)}-${digits.slice(5, 12)}-${digits.slice(12, 13)}`;
+      } else if (digits.length > 5) {
+        // 5 digits - next digits
+        formatted = `${digits.slice(0, 5)}-${digits.slice(5, 12)}`;
+      } else {
+        formatted = digits;
+      }
+      this.value = formatted;
+    });
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!input) return;
+
+      if (input.type === "password") {
+        input.type = "text";
+        if (icon) {
+          icon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+          `;
+        }
+      } else {
+        input.type = "password";
+        if (icon) {
+          icon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          `;
+        }
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const fullName = document.getElementById("reg-name").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const phone = document.getElementById("reg-phone").value.trim();
+      const cnic = document.getElementById("reg-cnic").value.trim();
+      const walletAddress = document.getElementById("reg-wallet").value.trim();
+      const role = document.querySelector('input[name="role"]:checked').value;
+
+      // 1. Full Name validation (Only alphabets and spaces allowed)
+      if (!fullName) {
+        showToast("Full Name is required", "error");
+        document.getElementById("reg-name").focus();
+        return;
+      }
+      if (!/^[A-Za-z\s]+$/.test(fullName)) {
+        showToast("Only alphabetic letters (A-Z, a-z)", "error");
+        document.getElementById("reg-name").focus();
+        return;
+      }
+
+      // 2. Password validation (Minimum 8 chars, must contain letter, digit, special char)
+      if (password.length < 8) {
+        showToast("Password must be at least 8 characters long", "error");
+        document.getElementById("reg-password").focus();
+        return;
+      }
+      if (!/[A-Za-z]/.test(password)) {
+        showToast("Password must contain at least one alphabet letter (A-Z, a-z)", "error");
+        document.getElementById("reg-password").focus();
+        return;
+      }
+      if (!/\d/.test(password)) {
+        showToast("Password must contain at least one number (0-9)", "error");
+        document.getElementById("reg-password").focus();
+        return;
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>\-_+=\[\]\\\/~`]/.test(password)) {
+        showToast("Password must contain at least one special character (!@#$%^&*)", "error");
+        document.getElementById("reg-password").focus();
+        return;
+      }
+
+      // Phone validation (+92 check)
+      if (phone) {
+        const phoneDigits = phone.replace(/\D/g, "");
+        if (!phone.startsWith("+92") || phoneDigits.length < 11) {
+          showToast("Phone number must start with +92 (e.g. +92 300 1234567)", "error");
+          document.getElementById("reg-phone").focus();
+          return;
+        }
+      }
+
+      // CNIC validation (13 digits: 5 - 7 - 1)
+      if (cnic) {
+        const cnicDigits = cnic.replace(/\D/g, "");
+        if (cnicDigits.length !== 13 || !/^\d{5}-\d{7}-\d{1}$/.test(cnic)) {
+          showToast("CNIC must be exactly 13 digits (format: 12345-1234567-1)", "error");
+          document.getElementById("reg-cnic").focus();
+          return;
+        }
+      }
+
+      try {
+        const res = await API.post("/auth/register", {
+          fullName,
+          email,
+          password,
+          phone,
+          cnic,
+          role,
+          walletAddress,
+        });
+
+        if (res.success) {
+          Auth.setAuth(res.user, res.token);
+          showToast("Account created successfully!", "success");
+          setTimeout(() => {
+            Auth.redirectByRole(res.user.role);
+          }, 600);
+        }
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+  </script>
+</body>
+</html>

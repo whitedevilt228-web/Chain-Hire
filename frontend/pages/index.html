@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChainHire 2.0 - Decentralized Career & Employment Verification</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: "#0F172A", 800: "#1E293B", 700: "#334155" },
+            emerald: { 500: "#10B981", 600: "#059669", 700: "#047857", 50: "#ECFDF5" },
+            surface: "#F8FAFC"
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body class="bg-surface text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Top Navbar -->
+  <header class="border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-navy-900 border border-slate-700 flex items-center justify-center text-emerald-400 shadow-sm group-hover:scale-105 transition-transform">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+          </svg>
+        </div>
+        <span class="text-xl font-black text-navy-900 tracking-tight">Chain<span class="text-emerald-500">Hire</span> 2.0</span>
+      </a>
+
+      <!-- Center Nav Links -->
+      <nav class="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-600">
+        <a href="#how-it-works" class="hover:text-emerald-600 transition-colors">How It Works</a>
+        <a href="#features" class="hover:text-emerald-600 transition-colors">Protocol Features</a>
+        <a href="jobs.html" class="hover:text-emerald-600 transition-colors">Explore Jobs</a>
+        <a href="#faq" class="hover:text-emerald-600 transition-colors">FAQ</a>
+      </nav>
+
+      <div id="home-nav-actions" class="flex items-center gap-3">
+        <a href="login.html" class="text-xs font-semibold text-slate-700 hover:text-emerald-600 transition-colors px-3 py-2">Sign In</a>
+        <a href="register.html" class="btn-emerald text-xs py-2 px-4 shadow-sm">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-6xl mx-auto px-6 pt-16 pb-12 text-center">
+    <div id="home-role-badge" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-6 shadow-sm">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+      Cryptographic Career Verification Protocol Live on Ethereum
+    </div>
+
+    <h1 class="text-4xl sm:text-6xl font-black text-navy-900 tracking-tight leading-[1.15] max-w-4xl mx-auto">
+      Decentralized Career Verification <br />
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600">
+        Anchored on the Blockchain
+      </span>
+    </h1>
+
+    <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto mt-6 leading-relaxed">
+      ChainHire empowers professionals to build an immutable cryptographic record of their work history, while giving Web3 recruiters 100% fraud-free talent verification in seconds.
+    </p>
+
+    <!-- CTAs -->
+    <div id="home-cta-container" class="flex flex-wrap items-center justify-center gap-4 mt-8">
+      <a href="login.html" id="home-primary-cta" class="btn-emerald py-3 px-7 rounded-xl text-sm shadow-lg hover:shadow-emerald-500/25 transition-all">
+        <span>Launch App / Login</span>
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+      <a href="jobs.html" class="btn-outline-secondary py-3 px-7 rounded-xl text-sm hover:border-emerald-500 hover:text-emerald-600 transition-colors">
+        Explore Web3 Jobs
+      </a>
+    </div>
+
+    <!-- Live Platform Metrics Strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto mt-14 p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-left">
+      <div class="p-2">
+        <div class="text-2xl font-black text-slate-900">100%</div>
+        <div class="text-xs text-slate-500 font-medium mt-0.5">Cryptographic Accuracy</div>
+      </div>
+      <div class="p-2 border-l border-slate-100">
+        <div class="text-2xl font-black text-emerald-600">0%</div>
+        <div class="text-xs text-slate-500 font-medium mt-0.5">Resume Fraud</div>
+      </div>
+      <div class="p-2 border-l border-slate-100">
+        <div class="text-2xl font-black text-slate-900">Instant</div>
+        <div class="text-xs text-slate-500 font-medium mt-0.5">On-Chain Verification</div>
+      </div>
+      <div class="p-2 border-l border-slate-100">
+        <div class="text-2xl font-black text-indigo-600">EVM Native</div>
+        <div class="text-xs text-slate-500 font-medium mt-0.5">MetaMask & Smart Contract</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="py-16 bg-white border-y border-slate-100">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <h2 class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Simple & Secure Workflow</h2>
+        <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">How ChainHire Works</h3>
+        <p class="text-xs text-slate-500 mt-2">A transparent 3-step process connecting job seekers and verified recruiters.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <!-- Step 1 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 relative group hover:border-emerald-200 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white font-black text-base flex items-center justify-center mb-4 shadow-sm">
+            1
+          </div>
+          <h4 class="font-bold text-slate-900 text-base">Add Experience & Request Proof</h4>
+          <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+            Candidates add their previous work tenure and send a direct cryptographic verification request to their past employer.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 relative group hover:border-emerald-200 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-teal-600 text-white font-black text-base flex items-center justify-center mb-4 shadow-sm">
+            2
+          </div>
+          <h4 class="font-bold text-slate-900 text-base">Recruiter Signs On-Chain</h4>
+          <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+            The employer reviews the request in their inbox and verifies it with a single transaction via MetaMask using our verified smart contract.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 relative group hover:border-emerald-200 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-black text-base flex items-center justify-center mb-4 shadow-sm">
+            3
+          </div>
+          <h4 class="font-bold text-slate-900 text-base">Immutable Career Passport</h4>
+          <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+            The credential is minted permanently on-chain. Candidates apply to top Web3 jobs with 100% cryptographic proof of experience.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dual Persona Section (Candidates vs Employers) -->
+  <section class="py-16 bg-surface">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- For Job Seekers -->
+        <div class="chain-card p-8 bg-gradient-to-br from-white to-emerald-50/40 border-emerald-100/80">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-emerald-100 text-emerald-800 mb-4">
+            For Job Seekers & Developers
+          </div>
+          <h3 class="text-xl font-bold text-slate-900">Own Your Career Reputation</h3>
+          <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+            No more paper certificates or fake resume accusations. Build a portable Web3 reputation backed by cryptographic attestations from real employers.
+          </p>
+          <ul class="mt-5 space-y-2.5 text-xs text-slate-700">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Verified On-Chain Badges displayed on your profile</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Direct 1-click job applications with verified credibility</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Real-time direct messaging with verified hiring managers</span>
+            </li>
+          </ul>
+          <div class="mt-6">
+            <a href="register.html" class="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1">
+              Create Candidate Account →
+            </a>
+          </div>
+        </div>
+
+        <!-- For Recruiters -->
+        <div class="chain-card p-8 bg-gradient-to-br from-white to-blue-50/40 border-blue-100/80">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-blue-100 text-blue-800 mb-4">
+            For Employers & Recruiters
+          </div>
+          <h3 class="text-xl font-bold text-slate-900">Hire Verified Talent Faster</h3>
+          <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+            Eliminate background check delays and hiring fraud. Review candidates with tamper-proof employment history and manage your entire talent pipeline.
+          </p>
+          <ul class="mt-5 space-y-2.5 text-xs text-slate-700">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Verify ex-employees on-chain with simple MetaMask signatures</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Post openings and automatically close filled positions upon hiring</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>Real-time applicant inbox with verified experience score meters</span>
+            </li>
+          </ul>
+          <div class="mt-6">
+            <a href="register.html" class="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1">
+              Register as Employer →
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Protocol Features -->
+  <section id="features" class="py-16 bg-white border-t border-slate-100">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <h2 class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Built for Security</h2>
+        <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Protocol Architecture</h3>
+        <p class="text-xs text-slate-500 mt-2">Enterprise-grade security combining decentralized smart contracts and fast web applications.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        <div class="chain-card p-6 bg-white hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 font-bold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm">Smart Contract Registry</h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Verifications are permanently minted on Ethereum and verifiable by anyone with public blockchain transactions.
+          </p>
+        </div>
+
+        <div class="chain-card p-6 bg-white hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 font-bold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm">MetaMask Web3 Signing</h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Native Web3 signing allows employers to sign verification attestations directly with single-click wallet transactions.
+          </p>
+        </div>
+
+        <div class="chain-card p-6 bg-white hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4 font-bold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm">Web3 Career Marketplace</h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Browse verified Web3 job listings, submit applications with verified proofs, and chat directly in real-time.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-16 bg-surface border-t border-slate-200/60">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Got Questions?</h2>
+        <h3 class="text-2xl font-bold text-slate-900 mt-1">Frequently Asked Questions</h3>
+      </div>
+
+      <div class="space-y-4">
+        <details class="group p-5 bg-white rounded-xl border border-slate-200/80 shadow-sm cursor-pointer">
+          <summary class="font-bold text-sm text-slate-900 flex items-center justify-between list-none">
+            <span>What is on-chain employment verification?</span>
+            <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+            On-chain employment verification records a cryptographic attestation of a candidate's job title, company, and dates directly onto the Ethereum smart contract registry. It cannot be edited, falsified, or deleted.
+          </p>
+        </details>
+
+        <details class="group p-5 bg-white rounded-xl border border-slate-200/80 shadow-sm cursor-pointer">
+          <summary class="font-bold text-sm text-slate-900 flex items-center justify-between list-none">
+            <span>Do candidates have to pay gas fees?</span>
+            <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+            No. Job seekers submit verification requests for free. The employer or recruiter approves the credential on-chain using their MetaMask wallet.
+          </p>
+        </details>
+
+        <details class="group p-5 bg-white rounded-xl border border-slate-200/80 shadow-sm cursor-pointer">
+          <summary class="font-bold text-sm text-slate-900 flex items-center justify-between list-none">
+            <span>How does the hiring workflow manage active jobs?</span>
+            <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+            When an employer marks a candidate as "Hired", the system automatically marks the job position as filled and removes it from active public listings.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clean Professional Footer (No programming languages listed) -->
+  <footer class="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 font-bold text-slate-800">
+        <span>ChainHire 2.0</span>
+        <span class="text-slate-300">•</span>
+        <span class="font-normal text-slate-500">Decentralized Career & Employment Verification</span>
+      </div>
+      <div class="flex items-center gap-6 text-slate-400">
+        <a href="#how-it-works" class="hover:text-emerald-600 transition-colors">How It Works</a>
+        <a href="jobs.html" class="hover:text-emerald-600 transition-colors">Jobs</a>
+        <a href="login.html" class="hover:text-emerald-600 transition-colors">Login</a>
+        <span>© 2024 ChainHire Protocol. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    // Adapt home page for logged in users
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = Auth.getUser();
+      const token = Auth.getToken();
+
+      if (user && token) {
+        let dashboardUrl = "seeker-dashboard.html";
+        if (user.role === "admin") dashboardUrl = "admin-dashboard.html";
+        else if (user.role === "recruiter") dashboardUrl = "recruiter-dashboard.html";
+
+        // Update Navbar
+        const navActions = document.getElementById("home-nav-actions");
+        if (navActions) {
+          navActions.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="text-xs text-slate-500 hidden sm:inline">Signed in as <strong class="text-slate-800">${user.fullName}</strong></span>
+              <a href="${dashboardUrl}" class="btn-emerald text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm">
+                <span>Go to Dashboard</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+              <button onclick="Auth.logout()" class="text-xs text-slate-500 hover:text-red-500 font-medium">Logout</button>
+            </div>
+          `;
+        }
+
+        // Update Hero Primary CTA
+        const primaryCta = document.getElementById("home-primary-cta");
+        if (primaryCta) {
+          primaryCta.href = dashboardUrl;
+          primaryCta.innerHTML = `
+            <span>Go to My Dashboard</span>
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          `;
+        }
+
+        // Badge update
+        const badge = document.getElementById("home-role-badge");
+        if (badge) {
+          badge.innerHTML = `
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Logged in as ${user.fullName} (${user.role === 'jobSeeker' ? 'Job Seeker' : (user.role === 'recruiter' ? 'Employer/Recruiter' : 'Admin')})
+          `;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

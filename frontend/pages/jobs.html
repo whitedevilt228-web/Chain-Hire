@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Your Next Opportunity - ChainHire 2.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: "#0F172A", 800: "#1E293B", 700: "#334155" },
+            emerald: { 500: "#10B981", 600: "#059669", 700: "#047857", 50: "#ECFDF5" },
+            surface: "#F8FAFC"
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+</head>
+<body class="bg-surface text-slate-800 antialiased min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 ml-[260px]">
+      <!-- Topbar Header -->
+      <div id="topbar-container"></div>
+
+      <!-- Main Container -->
+      <main class="p-8 max-w-7xl mx-auto">
+        
+        <!-- Header & Filter Toolbar (Matching Screenshot 4) -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Find Your Next Opportunity</h1>
+            <p class="text-xs text-slate-500 mt-1">Discover roles at top companies and build the future with Web3.</p>
+          </div>
+
+          <!-- Controls & Filters Bar -->
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Location Filter -->
+            <div class="relative">
+              <select id="job-location-filter" onchange="Jobs.loadJobs(1)" 
+                class="appearance-none pl-8 pr-8 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:outline-none focus:border-emerald-500 cursor-pointer shadow-sm">
+                <option value="All Locations">Location</option>
+                <option value="Remote">Remote</option>
+                <option value="Singapore">Singapore</option>
+                <option value="New York">New York</option>
+                <option value="London">London</option>
+              </select>
+              <span class="absolute left-2.5 top-2.5 pointer-events-none text-slate-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </span>
+              <span class="absolute right-2.5 top-3 pointer-events-none text-slate-400">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </div>
+
+            <!-- Job Type Filter -->
+            <div class="relative">
+              <select id="job-type-filter" onchange="Jobs.loadJobs(1)" 
+                class="appearance-none pl-8 pr-8 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:outline-none focus:border-emerald-500 cursor-pointer shadow-sm">
+                <option value="All Types">Job Type</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Part-time">Part-time</option>
+              </select>
+              <span class="absolute left-2.5 top-2.5 pointer-events-none text-slate-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </span>
+              <span class="absolute right-2.5 top-3 pointer-events-none text-slate-400">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </div>
+
+            <!-- More Filters Button -->
+            <button onclick="document.getElementById('job-search-input').focus()" class="flex items-center gap-1.5 px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+              <span>More Filters</span>
+            </button>
+
+            <!-- Reset Filters Button -->
+            <button onclick="Jobs.resetFilters()" class="flex items-center gap-1.5 px-3 py-2 text-xs text-slate-500 hover:text-slate-800 font-medium transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Reset Filters</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Hidden search input bound to global topbar search or direct key -->
+        <input type="hidden" id="job-search-input" />
+
+        <!-- Recruiter Segregation Tabs (Shown only for recruiters) -->
+        <div id="recruiter-job-tabs" class="hidden mb-6 flex items-center gap-3 border-b border-slate-200 text-xs font-semibold">
+          <button id="tab-my-jobs" onclick="Jobs.setRecruiterFilter('mine')" class="pb-3 border-b-2 border-emerald-500 text-emerald-600 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span>My Posted Jobs (History)</span>
+            <span id="tab-my-jobs-badge" class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px]">0</span>
+          </button>
+          <button id="tab-other-jobs" onclick="Jobs.setRecruiterFilter('others')" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <span>Other Companies' Jobs</span>
+          </button>
+          <button id="tab-all-jobs" onclick="Jobs.setRecruiterFilter('all')" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors">
+            <span>All Platform Jobs</span>
+          </button>
+        </div>
+
+        <!-- 3-Column Jobs Grid (Matching Screenshot 4) -->
+        <div id="jobs-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <!-- Dynamically populated via jobs.js -->
+        </div>
+
+        <!-- Bottom Pagination (Matching Screenshot 4) -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200">
+          <div id="pagination-summary-text" class="text-xs text-slate-500">
+            Showing 1 – 6 of 24 jobs
+          </div>
+
+          <div id="pagination-buttons-container" class="flex items-center gap-1.5">
+            <!-- Dynamically populated via jobs.js -->
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Apply to Job Modal -->
+  <div id="apply-job-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="chain-card max-w-lg w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 id="apply-modal-title" class="font-bold text-slate-900 text-base">Smart Contract Engineer</h3>
+          <p id="apply-modal-company" class="text-xs text-emerald-600 font-medium">DeFi Labs</p>
+        </div>
+        <button onclick="Jobs.closeApplyModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+      </div>
+
+      <form onsubmit="Jobs.submitApplication(event)" class="mt-4 space-y-4">
+        <input type="hidden" id="apply-job-id" />
+
+        <div class="p-3 bg-emerald-50/70 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Your verified on-chain credentials will automatically accompany your application.</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Upload Resume / CV (Optional)</label>
+          <input type="file" id="apply-resume-file" accept=".pdf,.doc,.docx" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Cover Note</label>
+          <textarea id="apply-cover-note" rows="3" placeholder="Briefly describe why you are the ideal fit for this role..." 
+            class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3">
+          <button type="button" onclick="Jobs.closeApplyModal()" class="btn-outline-secondary text-xs">Cancel</button>
+          <button type="submit" class="btn-emerald text-xs">Submit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/web3.js"></script>
+  <script src="../js/jobs.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      Jobs.init();
+
+      // Hook up topbar search to jobs filter
+      const globalSearch = document.getElementById("global-search-input");
+      if (globalSearch) {
+        globalSearch.addEventListener("input", (e) => {
+          const hiddenSearch = document.getElementById("job-search-input");
+          if (hiddenSearch) {
+            hiddenSearch.value = e.target.value;
+            Jobs.loadJobs(1);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
